@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Popular Movies One</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_movies_list">Movies List</string>
+    <string name="title_activity_movie_detail">MovieDetail</string>
+    <string name="please_wait">Please wait..</string>
+    <string name="no_internet_connection">No internet connection.</string>
+    <string name="retry">RETRY</string>
+    <string name="feature_in_stage_two">Feature in Stage 2</string>
+
+    <!---->
+
+
+
+
+    <string name="most_popular">Most Popular</string>
+    <string name="highest_rated">Highest Rated</string>
+
+</resources>
