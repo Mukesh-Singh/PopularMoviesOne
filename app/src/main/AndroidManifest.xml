@@ -32,6 +32,9 @@
             android:theme="@style/AppTheme"
             android:name="com.movies.popular.activity.MovieDetailActivity">
         </activity>
+        <activity android:name="com.movies.popular.activity.ReviewsListingActivity"
+
+            android:theme="@style/AppTheme"/>
 
     </application>
 
