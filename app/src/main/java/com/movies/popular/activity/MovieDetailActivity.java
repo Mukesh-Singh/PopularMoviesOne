@@ -9,9 +9,7 @@ import android.view.MenuItem;
 
 import com.movies.popular.base.BaseActivity;
 import com.movies.popular.fragments.MovieDetailFragment;
-import com.movies.popular.model.movie_api.MoviesResponseBean;
 import com.movies.popular.one.R;
-import com.movies.popular.utility.AppConstants;
 
 public class MovieDetailActivity extends BaseActivity {
 
@@ -31,13 +29,12 @@ public class MovieDetailActivity extends BaseActivity {
 
     private void initUI() {
         MovieDetailFragment mMovieDetailFragment = new MovieDetailFragment();
-        MoviesResponseBean.MoviesResult moviesResult=getIntent().getParcelableExtra(AppConstants.EXTRA_INTENT_PARCEL);
-        Bundle bundle= new Bundle();
-        bundle.putParcelable(AppConstants.EXTRA_INTENT_PARCEL,moviesResult);
+        //MoviesResponseBean.MoviesResult moviesResult=getIntent().getParcelableExtra(AppConstants.EXTRA_INTENT_PARCEL);
+        Bundle bundle=getIntent().getExtras();
+        //bundle.putParcelable(AppConstants.EXTRA_INTENT_PARCEL,moviesResult);
         mMovieDetailFragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
                 .replace(R.id.movie_detail_container, mMovieDetailFragment, "detailfragment")
-                .addToBackStack(null)
                 .commit();
     }
 

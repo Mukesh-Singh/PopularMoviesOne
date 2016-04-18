@@ -41,6 +41,11 @@ public class MoviesResponseBean {
 
     public static class MoviesResult implements Parcelable {
 
+        public MoviesResult() {
+
+        }
+
+
         @SerializedName("poster_path")
         private String posterPath;
 
@@ -80,6 +85,7 @@ public class MoviesResponseBean {
 
         private double runtime;
         private String tagline;
+        private String isFavorite;
 
         public MoviesResult(Parcel in) {
             posterPath = in.readString();
@@ -142,6 +148,10 @@ public class MoviesResponseBean {
         public String getOverview() {
             return overview;
         }
+        
+        public void setOverview(String overview){
+            this.overview=overview;
+        }
 
         public String getReleaseDate() {
             return releaseDate;
@@ -195,6 +205,34 @@ public class MoviesResponseBean {
             if (TextUtils.isEmpty(tagline))
                 return "";
             return tagline;
+        }
+
+        public String getIsFavorite() {
+            return isFavorite;
+        }
+
+        public void setIsFavorite(String isFavorite) {
+            this.isFavorite = isFavorite;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public void setPosterPath(String posterPath) {
+            this.posterPath = posterPath;
+        }
+
+        public void setReleaseDate(String releaseDate) {
+            this.releaseDate = releaseDate;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public void setVoteAverage(double voteAverage) {
+            this.voteAverage = voteAverage;
         }
     }
 }

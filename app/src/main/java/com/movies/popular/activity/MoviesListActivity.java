@@ -8,14 +8,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.movies.popular.base.ApplicationController;
 import com.movies.popular.base.BaseActivity;
-import com.movies.popular.one.R;
+import com.movies.popular.db.MoviesHelper;
 import com.movies.popular.fragments.MoviesListFragment;
+import com.movies.popular.one.R;
 
 public class MoviesListActivity extends BaseActivity {
 
     private FragmentManager mManager;
     private MoviesListFragment mMoviesListFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -26,14 +29,28 @@ public class MoviesListActivity extends BaseActivity {
     }
 
     private void intUI() {
+        MoviesHelper.getDatabaseHelperInstance(ApplicationController.getApplicationInstance());
         setTitle(getString(R.string.title_activity_movies_list));
+        if (findViewById(R.id.item_detail_container) != null) {
+            // The detail container view will be present only in the
+            // large-screen layouts (res/values-w900dp).
+            // If this view is present, then the
+            // activity should be in two-pane mode.
+            mTwoPane = true;
+        }
+
+
+
         mManager = getFragmentManager();
         if (mMoviesListFragment==null)
             mMoviesListFragment = new MoviesListFragment();
+
         mManager.beginTransaction()
                 .replace(R.id.list_container, mMoviesListFragment, "listfragment")
                 .addToBackStack(null)
                 .commit();
+
+
 
 
     }

@@ -7,6 +7,7 @@ import android.view.MenuItem;
  * Created by mukesh on 12/2/16.
  */
 public class BaseActivity extends AppCompatActivity{
+    public boolean mTwoPane;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

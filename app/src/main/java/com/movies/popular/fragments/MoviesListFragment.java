@@ -3,8 +3,8 @@ package com.movies.popular.fragments;
  * Created by mukesh on 1/2/16.
  */
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -22,12 +22,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.movies.popular.activity.MovieDetailActivity;
-import com.movies.popular.activity.MoviesListActivity;
 import com.movies.popular.adapters.MoviesListAdapter;
 import com.movies.popular.api.ApiConstants;
 import com.movies.popular.api.RestClient;
 import com.movies.popular.base.ApplicationController;
 import com.movies.popular.base.BaseActivity;
+import com.movies.popular.db.MoviesListingTable;
 import com.movies.popular.model.movie_api.MoviesResponseBean;
 import com.movies.popular.one.R;
 import com.movies.popular.utility.AppConstants;
@@ -57,16 +57,17 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
     private View view;
 
     private EndlessScrollGridLayoutManager mGridLayoutManager;
-
+    private MovieDetailFragment mMovieDetailFragment;
 
 
     @Override
-    public void onAttach(Context context) {
-        if (context instanceof MoviesListActivity)
-            activity=(MoviesListActivity)context;
+    public void onAttach(Activity activity) {
+        if (activity instanceof BaseActivity)
+            this.activity=(BaseActivity)activity;
 
-        super.onAttach(context);
+        super.onAttach(activity);
     }
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,22 +133,18 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
     } ;
         mMoviesListRecyclerView.setLayoutManager(mGridLayoutManager);
 
-        setListAdapter(view);
+        setListAdapter();
         getMoviesList(View.VISIBLE);
 
     }
 
-    private void setListAdapter(final View view) {
+    private void setListAdapter() {
         if (mAdapter == null) {
             mAdapter = new MoviesListAdapter(getActivity(),moviesResultsList) {
                 @Override
                 public void onItemClick(int position) {
                     super.onItemClick(position);
-                    Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-                    intent.putExtra(AppConstants.EXTRA_INTENT_PARCEL, moviesResultsList.get(position));
-                    Pair<View, String> p6 = Pair.create(view, "row");
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), p6);
-                    startActivity(intent,options.toBundle());
+                    showMoviesDetails(position);
 
                 }
             };
@@ -159,8 +156,36 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
         }
     }
 
+    private void showMoviesDetails(int position){
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AppConstants.EXTRA_INTENT_PARCEL, moviesResultsList.get(position));
+        if (activity.mTwoPane){
+            mMovieDetailFragment = new MovieDetailFragment();
+            mMovieDetailFragment.setArguments(bundle);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.item_detail_container, mMovieDetailFragment, "detailfragment")
+                    .commit();
+        }
+        else {
+            Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
+            intent.putExtras(bundle);
+            Pair<View, String> p6 = Pair.create(view, "row");
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), p6);
+            startActivity(intent,options.toBundle());
+        }
+
+    }
+
+
+
     private void getMoviesList(int progressBarVisibility) {
-        if (ApplicationController.getApplicationInstance().isNetworkConnected()) {
+        if (mSortByParam.equals(ApiConstants.MY_FAVORITES)) {
+            MoviesListingTable moviesListingDao = new MoviesListingTable(activity);
+            mMoviesListRecyclerView.setOnClickListener(null);
+            moviesResultsList.addAll(moviesListingDao.getFavouriteMovieList());
+            setListAdapter();
+            mProgressBar.setVisibility(View.GONE);
+        } else if (ApplicationController.getApplicationInstance().isNetworkConnected()) {
             mProgressBar.setVisibility(progressBarVisibility);
             HashMap<String, String> stringHashMap = new HashMap<>();
             stringHashMap.put(ApiConstants.PARAM_SORT_BY, mSortByParam);
@@ -171,14 +196,19 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
             beanCall.enqueue(new Callback<MoviesResponseBean>() {
                 @Override
                 public void onResponse(Response<MoviesResponseBean> response, Retrofit retrofit) {
-                    mProgressBar.setVisibility(View.GONE);
-                    MoviesResponseBean responseBean = response.body();
-                    moviesResultsList.addAll(responseBean.getResults());
-                    setListAdapter(view);
+                    try {
+                        mProgressBar.setVisibility(View.GONE);
+                        MoviesResponseBean responseBean = response.body();
+                        moviesResultsList.addAll(responseBean.getResults());
+                        setListAdapter();
 
 
-                    if (responseBean.getResults().isEmpty())
-                        Log.i("Retro", response.toString());
+                        if (responseBean.getResults().isEmpty())
+                            Log.i("Retro", response.toString());
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -219,16 +249,30 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
                 isSortApplied = true;
                 onRefresh();
                 return true;
+            case R.id.my_favorites:
+                mSortByParam = ApiConstants.MY_FAVORITES;
+                isSortApplied = true;
+                onRefresh();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void removeExitingDetailFragment(){
+        if (activity.mTwoPane){
+            getFragmentManager().beginTransaction()
+                    .remove(mMovieDetailFragment)
+                    .commit();
+        }
+
     }
 
     @Override
     public void onRefresh() {
         mSwipeRefreshLayout.setRefreshing(false);
-        if (ApplicationController.getApplicationInstance().isNetworkConnected()) {
             mPagination = 1;
             moviesResultsList.clear();
+            removeExitingDetailFragment();
             try {
                 mAdapter.notifyDataSetChanged();
                 mAdapter = null;
@@ -240,9 +284,7 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
             } else {
                 mSortByParam = ApiConstants.POPULARITY_DESC;
             }
+
             getMoviesList(View.VISIBLE);
-        } else {
-            mSnackBar = SnackBarBuilder.make(getActivity().getWindow().getDecorView(), getString(R.string.no_internet_connection)).build();
         }
-    }
 }
