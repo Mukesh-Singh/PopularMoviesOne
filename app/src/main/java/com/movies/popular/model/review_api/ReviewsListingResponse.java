@@ -1,5 +1,8 @@
 package com.movies.popular.model.review_api;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
@@ -30,8 +33,30 @@ public class ReviewsListingResponse {
         return results;
     }
 
-    public static class ReviewsEntity {
+    public static class ReviewsEntity implements Parcelable{
         String id, author, content, url;
+
+        public ReviewsEntity(){
+
+        }
+        protected ReviewsEntity(Parcel in) {
+            id = in.readString();
+            author = in.readString();
+            content = in.readString();
+            url = in.readString();
+        }
+
+        public static final Creator<ReviewsEntity> CREATOR = new Creator<ReviewsEntity>() {
+            @Override
+            public ReviewsEntity createFromParcel(Parcel in) {
+                return new ReviewsEntity(in);
+            }
+
+            @Override
+            public ReviewsEntity[] newArray(int size) {
+                return new ReviewsEntity[size];
+            }
+        };
 
         public String getId() {
             return id;
@@ -47,6 +72,19 @@ public class ReviewsListingResponse {
 
         public String getUrl() {
             return url;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(id);
+            parcel.writeString(author);
+            parcel.writeString(content);
+            parcel.writeString(url);
         }
     }
 }

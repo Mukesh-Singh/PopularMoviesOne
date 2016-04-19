@@ -234,5 +234,13 @@ public class MoviesResponseBean {
         public void setVoteAverage(double voteAverage) {
             this.voteAverage = voteAverage;
         }
+
+        public void setRuntime(double runtime) {
+            this.runtime = runtime;
+        }
+
+        public void setTagline(String tagline) {
+            this.tagline = tagline;
+        }
     }
 }

@@ -22,8 +22,8 @@ public class MovieDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_movie_detail);
         setTitle(getString(R.string.title_activity_movie_detail));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        initUI();
+        if (savedInstanceState==null)
+            initUI();
 
     }
 
@@ -33,6 +33,7 @@ public class MovieDetailActivity extends BaseActivity {
         Bundle bundle=getIntent().getExtras();
         //bundle.putParcelable(AppConstants.EXTRA_INTENT_PARCEL,moviesResult);
         mMovieDetailFragment.setArguments(bundle);
+        mMovieDetailFragment.setRetainInstance(true);
         getFragmentManager().beginTransaction()
                 .replace(R.id.movie_detail_container, mMovieDetailFragment, "detailfragment")
                 .commit();

@@ -26,6 +26,22 @@ public class MoviesListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_list);
         intUI();
+        if (savedInstanceState==null){
+            mManager = getFragmentManager();
+            if (mMoviesListFragment==null)
+                mMoviesListFragment = new MoviesListFragment();
+            mManager.beginTransaction()
+                    .replace(R.id.list_container, mMoviesListFragment, "listfragment")
+                    .addToBackStack(null)
+                    .commit();
+
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
     }
 
     private void intUI() {
@@ -41,14 +57,7 @@ public class MoviesListActivity extends BaseActivity {
 
 
 
-        mManager = getFragmentManager();
-        if (mMoviesListFragment==null)
-            mMoviesListFragment = new MoviesListFragment();
 
-        mManager.beginTransaction()
-                .replace(R.id.list_container, mMoviesListFragment, "listfragment")
-                .addToBackStack(null)
-                .commit();
 
 
 

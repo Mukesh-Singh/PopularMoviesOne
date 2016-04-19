@@ -59,6 +59,10 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
     private EndlessScrollGridLayoutManager mGridLayoutManager;
     private MovieDetailFragment mMovieDetailFragment;
 
+    private static final String DATA="data";
+    private static final String SELECTED_POSITION="selected_position";
+    private int mSelectedPosition;
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -75,6 +79,17 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SELECTED_POSITION,mSelectedPosition);
+        outState.putParcelableArrayList(DATA,moviesResultsList);
+        super.onSaveInstanceState(outState);
+
+
+    }
+
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_movie_list, container, false);
@@ -86,6 +101,20 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
         super.onViewCreated(view, savedInstanceState);
         this.view=view;
         intUI(view);
+        if (savedInstanceState!=null){
+            mSelectedPosition=savedInstanceState.getInt(SELECTED_POSITION);
+            moviesResultsList.clear();
+            ArrayList<MoviesResponseBean.MoviesResult> p=savedInstanceState.getParcelableArrayList(DATA);
+            moviesResultsList.addAll(p);
+            setListAdapter();
+            if (activity.mTwoPane){
+                //showMoviesDetails(mSelectedPosition);
+            }
+        }
+        else {
+            getMoviesList(View.VISIBLE);
+        }
+
 
     }
 
@@ -133,8 +162,8 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
     } ;
         mMoviesListRecyclerView.setLayoutManager(mGridLayoutManager);
 
-        setListAdapter();
-        getMoviesList(View.VISIBLE);
+
+
 
     }
 
@@ -157,10 +186,12 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void showMoviesDetails(int position){
+        mSelectedPosition =position;
         Bundle bundle = new Bundle();
         bundle.putParcelable(AppConstants.EXTRA_INTENT_PARCEL, moviesResultsList.get(position));
         if (activity.mTwoPane){
             mMovieDetailFragment = new MovieDetailFragment();
+            mMovieDetailFragment.setRetainInstance(true);
             mMovieDetailFragment.setArguments(bundle);
             getFragmentManager().beginTransaction()
                     .replace(R.id.item_detail_container, mMovieDetailFragment, "detailfragment")

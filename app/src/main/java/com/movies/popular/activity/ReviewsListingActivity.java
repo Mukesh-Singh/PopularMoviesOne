@@ -33,6 +33,8 @@ import retrofit.Retrofit;
  */
 public class ReviewsListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final String DATA = "data";
+    private static final String PAGE_NUMBER = "page_number";
     private ListView mReviewsListView;
     private int mPagination = 1;
     private ProgressBar progressBar;
@@ -59,10 +61,24 @@ public class ReviewsListingActivity extends BaseActivity implements SwipeRefresh
         setContentView(R.layout.activity_reviews_listing);
         setTitle(getString(R.string.reviews));
         initUi();
+        if (savedInstanceState!=null){
+            mPagination=savedInstanceState.getInt(PAGE_NUMBER);
+            moviesReviewsList.clear();
+            ArrayList<ReviewsListingResponse.ReviewsEntity> p=savedInstanceState.getParcelableArrayList(DATA);
+            moviesReviewsList.addAll(p);
+            updateData();
+        }
+        else {
+            getMovieReviews();
+        }
     }
 
-
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(DATA,moviesReviewsList);
+        outState.putInt(PAGE_NUMBER,mPagination);
+        super.onSaveInstanceState(outState);
+    }
 
     public void initUi() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -72,7 +88,7 @@ public class ReviewsListingActivity extends BaseActivity implements SwipeRefresh
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.review_swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         progressBar = (ProgressBar)findViewById(R.id.review_progressBar);
-        getMovieReviews();
+
     }
 
     private void getMovieReviews() {
@@ -90,20 +106,7 @@ public class ReviewsListingActivity extends BaseActivity implements SwipeRefresh
                     ReviewsListingResponse responseBean = response1.body();
                     if (responseBean != null) {
                         moviesReviewsList.addAll(responseBean.getResults());
-
-                        if (mPagination == 1) {
-                            mReviewsListView.setOnScrollListener(mEndlessScrollListener);
-                        }
-
-                        if (mAdapter == null) {
-                            mAdapter = new ReviewsListAdapter(ReviewsListingActivity.this, moviesReviewsList);
-                            mReviewsListView.setAdapter(mAdapter);
-                        } else {
-                            mAdapter.notifyDataSetChanged();
-                        }
-                        if (responseBean.getResults().size() == 0) {
-                            mReviewsListView.setOnScrollListener(null);
-                        }
+                       updateData();
 
                     }
                 }
@@ -124,6 +127,23 @@ public class ReviewsListingActivity extends BaseActivity implements SwipeRefresh
                         }
                     })
                     .build();
+        }
+    }
+
+    private void updateData(){
+
+        if (mPagination == 1) {
+            mReviewsListView.setOnScrollListener(mEndlessScrollListener);
+        }
+
+        if (mAdapter == null) {
+            mAdapter = new ReviewsListAdapter(ReviewsListingActivity.this, moviesReviewsList);
+            mReviewsListView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
+        if (moviesReviewsList.size() == 0) {
+            mReviewsListView.setOnScrollListener(null);
         }
     }
 

@@ -73,6 +73,11 @@ public class MovieDetailFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
+    public void setRetainInstance(boolean retain) {
+        super.setRetainInstance(retain);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         intUI(view);
