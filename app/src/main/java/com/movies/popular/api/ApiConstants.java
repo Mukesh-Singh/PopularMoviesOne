@@ -18,7 +18,7 @@ public class ApiConstants {
     /**
      * Please replace this with your api key
      */
-    public static final String API_KEY = "e6177712a6fbb502abad001a3210aa00";
+    public static final String API_KEY = "";
 
     //API Params
     public static final String PARAM_SORT_BY = "sort_by";
