@@ -15,5 +15,14 @@
 
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest Rated</string>
+    <string name="reviews">Review</string>
+    <string name="see_more_review">See More Reviews</string>
+    <string name="mark_favorite">Mark as \nFavorite</string>
+    <string name="not_favorite">Mark as \nNot Favorite</string>
+    <string name="no_video_app_found">No app found to play video.</string>
+    <string name="by">By: </string>
+    <string name="add_to_fav">" added to favourites"</string>
+    <string name="removed_from_favourites">" removed from favourites"</string>
+    <string name="my_favorites">Favorites</string>
 
 </resources>

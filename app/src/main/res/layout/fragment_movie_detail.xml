@@ -98,7 +98,7 @@
                         android:background="@color/colorMarkFavoriteBackground"
                         android:gravity="center"
                         android:padding="2dp"
-                        android:text="Mark as \nFavorite"
+                        android:text="@string/mark_favorite"
                         android:textSize="16sp" />
                 </LinearLayout>
             </RelativeLayout>
@@ -113,17 +113,65 @@
                 android:text=""
                 android:textSize="16sp" />
 
-            <!-- <View
+             <View
                  android:layout_width="match_parent"
                  android:layout_height="0.5dp"
                  android:layout_margin="10dp"
-                 android:background="@android:color/background_dark" />-->
+                 android:background="@android:color/background_dark" />
 
-            <!--  <ListView
-                  android:id="@+id/fragment_movie_detail_expandable_list_view"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:transcriptMode="disabled" />-->
+            <FrameLayout
+                android:id="@+id/trailer_list_parent"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_margin="10dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/movie_detail_trailers_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp" />
+
+                <ProgressBar
+                    android:id="@+id/trailer_progress_bar"
+                    style="@style/Widget.MaterialProgressBar.ProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="true" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/reviews"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@android:color/background_dark" />
+
+            <LinearLayout
+                android:id="@+id/reviews_listing_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/see_more_reviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:padding="8dp"
+                android:text="@string/see_more_review"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>
