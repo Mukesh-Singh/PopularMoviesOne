@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +32,7 @@ import com.movies.popular.model.review_api.ReviewsListingResponse;
 import com.movies.popular.model.trailer_api.TrailersResponseBean;
 import com.movies.popular.one.R;
 import com.movies.popular.utility.AppConstants;
+import com.movies.popular.utility.RecyclerViewWithEmptySupport;
 import com.movies.popular.utility.SnackBarBuilder;
 import com.movies.popular.utility.Utility;
 
@@ -50,7 +50,7 @@ public class MovieDetailFragment extends Fragment implements View.OnClickListene
     private TextView mMovieTitle,mReleaseYear,mDuration,mRating,mMarkAsFav,mDescription,mTagLine;
     private ImageView mPosterImage;
     private Snackbar mSnackBar;
-    private RecyclerView mTrailersRecyclerView;
+    private RecyclerViewWithEmptySupport mTrailersRecyclerView;
     private LinearLayout reviewsContainer;
     private TextView seeMoreReviews;
     private FrameLayout mTrailerParentLayout;
@@ -98,10 +98,11 @@ public class MovieDetailFragment extends Fragment implements View.OnClickListene
         mMarkAsFav=(TextView)view.findViewById(R.id.fragment_movie_detail_favourite_tv);
         mDescription=(TextView)view.findViewById(R.id.fragment_movie_detail_description);
         mPosterImage=(ImageView)view.findViewById(R.id.fragment_movie_detail_image);
-        mTrailersRecyclerView=(RecyclerView) view.findViewById(R.id.movie_detail_trailers_list);
+        mTrailersRecyclerView=(RecyclerViewWithEmptySupport) view.findViewById(R.id.movie_detail_trailers_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mTrailersRecyclerView.setLayoutManager(linearLayoutManager);
+        mTrailersRecyclerView.setEmptyView(view.findViewById(R.id.trailer_list_empty));
         reviewsContainer = (LinearLayout) view.findViewById(R.id.reviews_listing_parent);
         seeMoreReviews = (TextView) view.findViewById(R.id.see_more_reviews);
         seeMoreReviews.setOnClickListener(this);

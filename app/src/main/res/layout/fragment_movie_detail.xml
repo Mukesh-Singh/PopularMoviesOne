@@ -125,10 +125,17 @@
                 android:layout_height="80dp"
                 android:layout_margin="10dp">
 
-                <android.support.v7.widget.RecyclerView
+                <com.movies.popular.utility.RecyclerViewWithEmptySupport
                     android:id="@+id/movie_detail_trailers_list"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp" />
+                    android:layout_height="80dp"
+                    />
+
+                <TextView android:id="@+id/trailer_list_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trailer_list_empty"
+                    />
 
                 <ProgressBar
                     android:id="@+id/trailer_progress_bar"

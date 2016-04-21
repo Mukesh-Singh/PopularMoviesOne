@@ -11,7 +11,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +31,7 @@ import com.movies.popular.model.movie_api.MoviesResponseBean;
 import com.movies.popular.one.R;
 import com.movies.popular.utility.AppConstants;
 import com.movies.popular.utility.EndlessScrollGridLayoutManager;
+import com.movies.popular.utility.RecyclerViewWithEmptySupport;
 import com.movies.popular.utility.SnackBarBuilder;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ import retrofit.Retrofit;
 public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private ProgressBar mProgressBar;
     private MoviesListAdapter mAdapter;
-    private RecyclerView mMoviesListRecyclerView;
+    private RecyclerViewWithEmptySupport mMoviesListRecyclerView;
     private int mPagination = 1;
     private ArrayList<MoviesResponseBean.MoviesResult> moviesResultsList = new ArrayList<>();
     private String mSortByParam = ApiConstants.POPULARITY_DESC;
@@ -128,7 +128,7 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
 
     private void intUI(View view)
     {
-        mMoviesListRecyclerView = (RecyclerView) view.findViewById(R.id.movies_list_recycler_view);
+        mMoviesListRecyclerView = (RecyclerViewWithEmptySupport) view.findViewById(R.id.movies_list_recycler_view);
         // use a Grid layout manager
 
         mSwipeRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
@@ -161,6 +161,7 @@ public class MoviesListFragment extends Fragment implements SwipeRefreshLayout.O
         }
     } ;
         mMoviesListRecyclerView.setLayoutManager(mGridLayoutManager);
+        mMoviesListRecyclerView.setEmptyView(view.findViewById(R.id.list_empty));
 
 
 

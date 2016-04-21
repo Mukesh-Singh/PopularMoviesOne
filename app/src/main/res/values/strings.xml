@@ -24,5 +24,7 @@
     <string name="add_to_fav">" added to favourites"</string>
     <string name="removed_from_favourites">" removed from favourites"</string>
     <string name="my_favorites">Favorites</string>
+    <string name="movies_list_empty">No movie found</string>
+    <string name="trailer_list_empty">There is no trailer for this movie</string>
 
 </resources>
